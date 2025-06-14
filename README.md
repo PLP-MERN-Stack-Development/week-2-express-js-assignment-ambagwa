@@ -1,63 +1,174 @@
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=19771910&assignment_repo_type=AssignmentRepo)
-# Express.js RESTful API Assignment
+# Product API
 
-This assignment focuses on building a RESTful API using Express.js, implementing proper routing, middleware, and error handling.
-
-## Assignment Overview
-
-You will:
-1. Set up an Express.js server
-2. Create RESTful API routes for a product resource
-3. Implement custom middleware for logging, authentication, and validation
-4. Add comprehensive error handling
-5. Develop advanced features like filtering, pagination, and search
+A RESTful API for managing products, built with Express and MongoDB.
 
 ## Getting Started
 
-1. Accept the GitHub Classroom assignment invitation
-2. Clone your personal repository that was created by GitHub Classroom
-3. Install dependencies:
+### Prerequisites
+
+- [Node.js](https://nodejs.org/)
+- [MongoDB](https://www.mongodb.com/)
+- npm
+
+### Installation
+
+1. Clone the repository:
+   ```
+   git clone <repository-url>
+   cd week-2-express-js-assignment-ambagwa
+   ```
+
+2. Install dependencies:
    ```
    npm install
    ```
-4. Run the server:
+
+3. Create a `.env` file based on `.env.example` and fill in your values.
+
+4. Start the server:
    ```
    npm start
    ```
+   The server will run on the port specified in your `.env` file (default: 3000).
 
-## Files Included
+## Environment Variables
 
-- `Week2-Assignment.md`: Detailed assignment instructions
-- `server.js`: Starter Express.js server file
-- `.env.example`: Example environment variables file
-
-## Requirements
-
-- Node.js (v18 or higher)
-- npm or yarn
-- Postman, Insomnia, or curl for API testing
+See `.env.example` for required variables.
 
 ## API Endpoints
 
-The API will have the following endpoints:
+### Authentication
 
-- `GET /api/products`: Get all products
-- `GET /api/products/:id`: Get a specific product
-- `POST /api/products`: Create a new product
-- `PUT /api/products/:id`: Update a product
-- `DELETE /api/products/:id`: Delete a product
+All endpoints require an `x-api-key` header with a valid API key.
 
-## Submission
+---
 
-Your work will be automatically submitted when you push to your GitHub Classroom repository. Make sure to:
+### GET `/api/products`
 
-1. Complete all the required API endpoints
-2. Implement the middleware and error handling
-3. Document your API in the README.md
-4. Include examples of requests and responses
+Retrieve a list of products.
 
-## Resources
+**Query Parameters:**
+- `category` (optional): Filter by category.
+- `page` (optional): Page number for pagination.
+- `limit` (optional): Number of products per page.
 
-- [Express.js Documentation](https://expressjs.com/)
-- [RESTful API Design Best Practices](https://restfulapi.net/)
-- [HTTP Status Codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) 
+**Example Request:**
+```
+GET /api/products?category=electronics&page=1&limit=5
+x-api-key: your-api-key
+```
+
+**Example Response:**
+```json
+{
+  "page": 1,
+  "limit": 5,
+  "total": 12,
+  "totalPages": 3,
+  "products": [
+    {
+      "_id": "123",
+      "name": "Phone",
+      "category": "electronics",
+      "price": 299.99,
+      "description": "A smartphone"
+    }
+  ]
+}
+```
+
+---
+
+### GET `/api/products/search?name=phone`
+
+Search for products by name (case-insensitive).
+
+**Example Request:**
+```
+GET /api/products/search?name=phone
+x-api-key: your-api-key
+```
+
+**Example Response:**
+```json
+[
+  {
+    "_id": "123",
+    "name": "Phone",
+    "category": "electronics",
+    "price": 299.99,
+    "description": "A smartphone"
+  }
+]
+```
+
+---
+
+### GET `/api/products/:id`
+
+Get a single product by ID.
+
+---
+
+### POST `/api/products`
+
+Create a new product.
+
+**Body:**
+```json
+{
+  "name": "Laptop",
+  "category": "electronics",
+  "price": 999.99,
+  "description": "A powerful laptop"
+}
+```
+
+---
+
+### PUT `/api/products/:id`
+
+Update an existing product.
+
+**Body:** Same as POST.
+
+---
+
+### DELETE `/api/products/:id`
+
+Delete a product by ID.
+
+---
+
+## Error Handling
+
+Errors are returned in JSON format with appropriate HTTP status codes.
+
+**Example:**
+```json
+{
+  "error": "Product not found"
+}
+```
+
+---
+
+## Logging
+
+All requests are logged with method, URL, and timestamp.
+
+---
+
+## Validation
+
+Product creation and update requests are validated for required fields.
+
+---
+
+## Example `.env.example`
+
+```
+MONGODB_URI=mongodb://localhost:27017/productsdb
+PORT=3000
+API_KEY=your-api-key
+```
